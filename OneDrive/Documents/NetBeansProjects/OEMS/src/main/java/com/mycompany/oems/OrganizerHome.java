@@ -338,7 +338,31 @@ public class OrganizerHome extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
 
+    try {
+        con = javaconnect.connectDB();
+
+        // 3️⃣ Today's Events
+        String todaySql = "SELECT COUNT(*) FROM events WHERE DATE(event_data) = CURDATE()";
+        pst = con.prepareStatement(todaySql);
+        rs = pst.executeQuery();
+        if (rs.next()) {
+            jTextField1.setText(rs.getString(1));
+        }
+
+        // 4️⃣ Upcoming Events
+        String upcomingSql = "SELECT COUNT(*) FROM events WHERE DATE(event_data) > CURDATE()";
+        pst = con.prepareStatement(upcomingSql);
+        rs = pst.executeQuery();
+        if (rs.next()) {
+            jTextField2.setText(rs.getString(1));
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Dashboard load error: " + e.getMessage());
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
